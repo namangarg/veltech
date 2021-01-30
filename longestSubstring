@@ -1,0 +1,18 @@
+var longestSubstring = function(s) {
+    let n = s.length;
+    let uniqueCharacters = new Set();
+    let lengthMax = 0;
+    let i=j =0;
+    while(i< n && j<n){
+        if(!uniqueCharacters.has(s[j])){
+            uniqueCharacters.add(s[j]);
+            lengthMax = Math.max(lengthMax, j-i +1);
+            j++;
+        }
+        else{
+            uniqueCharacters.delete(s[i]);
+            i++;
+        }
+    }
+    return lengthMax;
+};

@@ -1,0 +1,66 @@
+class LRUCache{
+  
+  constructor(capacity){
+    this.capacity = capacity;  
+    this.hashtable = {};
+    this.head = null;
+    this.tail = null;
+    this.count = 0;
+  }
+
+  get(key) {
+    if(this.hashtable[key]){
+       const {value} = this.hashtable[key];
+       const {prev, next} = this.hashtable[key];
+       if(prev){
+           prev.next = next; 
+       }
+       if(next){
+           next.prev = prev || next.prev;
+       }
+       if(this.tail === this.hashtable[key]){
+           if(prev){
+               this.tail = prev;
+           }
+       }
+       this.hashtable[key].prev = null;
+       if(this.head!==this.hashtable[key]){
+           this.hashtable[key].next = this.head;
+           this.head.prev = this.hashtable[key]; 
+       }
+        this.head = this.hashtable[key];
+        return value;
+     }
+       return -1;
+  }
+  
+  set(key, value) {
+    if(this.hashtable[key]){
+        this.hashtable[key].value = value;
+        this.get(key);
+    }
+    else{
+        this.hashtable[key] = {key, value, prev:null, next:null};
+        if(this.head){
+            this.head.prev = this.hashtable[key];
+            this.hashtable[key].next = this.head;
+        }   
+        this.head = this.hashtable[key];
+        if(!this.tail){
+            this.tail= this.hashtable[key];
+        }
+        this.count +=1;
+        if(this.count > this.capacity){
+            let removedKey = this.tail.key;
+                this.tail.prev.next = null;
+                this.tail = this.tail.prev;
+                this.hashtable[removedKey].prev = null;
+                
+            delete this.hashtable[removedKey];
+            this.count-=1;
+        }
+    }
+        
+  }
+
+}
